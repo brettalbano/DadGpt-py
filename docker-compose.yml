@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend # Path to your frontend project
+      dockerfile: Dockerfile # Dockerfile for the frontend
+    ports:
+      - "8080:80" # Map container port 80 to localhost:3000
+    depends_on:
+      - backend # Ensure the backend starts before the frontend
+    networks:
+      - webapp-network
+
+  backend:
+    build:
+      context: ./backend # Path to your backend project
+      dockerfile: Dockerfile # Dockerfile for the backend
+    ports:
+      - "5000:5000" # Map container port 5000 to localhost:5000
+    networks:
+      - webapp-network
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/mydatabase # Example environment variable
+
+networks:
+  webapp-network:
+    driver: bridge
+
+volumes:
+  db-data:
